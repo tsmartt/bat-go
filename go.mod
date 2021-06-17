@@ -26,6 +26,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/lib/pq v1.10.2
 	github.com/linkedin/goavro v2.1.0+incompatible
+	github.com/mdlayher/vsock v0.0.0-20210303205602-10d591861736 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/mssola/user_agent v0.5.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
