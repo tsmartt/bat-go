@@ -40,9 +40,6 @@ func Execute(version, commit, buildTime string) {
 	var logger *zerolog.Logger
 	ctx = context.WithValue(ctx, appctx.EnvironmentCTXKey, viper.Get("environment"))
 	ctx, logger = logging.SetupLogger(ctx)
-	// setup ratios service values
-	ctx = context.WithValue(ctx, appctx.RatiosServerCTXKey, viper.Get("ratios-service"))
-	ctx = context.WithValue(ctx, appctx.RatiosAccessTokenCTXKey, viper.Get("ratios-token"))
 
 	ctx = context.WithValue(ctx, appctx.VersionCTXKey, version)
 	ctx = context.WithValue(ctx, appctx.CommitCTXKey, commit)
@@ -67,30 +64,6 @@ func init() {
 		"the default environment")
 	Must(viper.BindPFlag("environment", RootCmd.PersistentFlags().Lookup("environment")))
 	Must(viper.BindEnv("environment", "ENV"))
-
-	// ratiosAccessToken (required by all)
-	RootCmd.PersistentFlags().String("ratios-token", "",
-		"the ratios service token for this service")
-	Must(viper.BindPFlag("ratios-token", RootCmd.PersistentFlags().Lookup("ratios-token")))
-	Must(viper.BindEnv("ratios-token", "RATIOS_TOKEN"))
-
-	// ratiosService (required by all)
-	RootCmd.PersistentFlags().String("ratios-service", "",
-		"the ratios service address")
-	Must(viper.BindPFlag("ratios-service", RootCmd.PersistentFlags().Lookup("ratios-service")))
-	Must(viper.BindEnv("ratios-service", "RATIOS_SERVICE"))
-
-	// ratiosClientExpiry
-	RootCmd.PersistentFlags().Duration("ratios-client-cache-expiry", 5*time.Second,
-		"the ratios client cache default eviction duration")
-	Must(viper.BindPFlag("ratios-client-cache-expiry", RootCmd.PersistentFlags().Lookup("ratios-client-cache-expiry")))
-	Must(viper.BindEnv("ratios-client-cache-expiry", "RATIOS_CACHE_EXPIRY"))
-
-	// ratiosClientPurge
-	RootCmd.PersistentFlags().Duration("ratios-client-cache-purge", 1*time.Minute,
-		"the ratios client cache default purge duration")
-	Must(viper.BindPFlag("ratios-client-cache-purge", RootCmd.PersistentFlags().Lookup("ratios-client-cache-purge")))
-	Must(viper.BindEnv("ratios-client-cache-purge", "RATIOS_CACHE_PURGE"))
 
 	RootCmd.AddCommand(VersionCmd)
 }
