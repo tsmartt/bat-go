@@ -19,9 +19,9 @@ import (
 	"github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 	"github.com/shopspring/decimal"
-	stripe "github.com/stripe/stripe-go/v71"
-	"github.com/stripe/stripe-go/v71/checkout/session"
-	"github.com/stripe/stripe-go/v71/customer"
+	stripe "github.com/stripe/stripe-go/v72"
+	"github.com/stripe/stripe-go/v72/checkout/session"
+	"github.com/stripe/stripe-go/v72/customer"
 	macaroon "gopkg.in/macaroon.v2"
 )
 
@@ -255,13 +255,24 @@ func (order Order) IsStripePayable() bool {
 	return strings.Contains(strings.Join(order.AllowedPaymentMethods, ","), StripePaymentMethod)
 }
 
+// HasSku - Does this order contain this sku
+func (order Order) HasSku(sku string) bool {
+	var found bool
+	for _, v := range order.Items {
+		if v.SKU == sku {
+			found = true
+		}
+	}
+	return found
+}
+
 // CreateCheckoutSessionResponse - the structure of a checkout session response
 type CreateCheckoutSessionResponse struct {
 	SessionID string `json:"checkoutSessionId"`
 }
 
 // CreateStripeCheckoutSession - Create a Stripe Checkout Session for an Order
-func (order Order) CreateStripeCheckoutSession(email, successURI, cancelURI string, freeTrialDays int64) (CreateCheckoutSessionResponse, error) {
+func (order Order) CreateStripeCheckoutSession(email, coupon, successURI, cancelURI string, freeTrialDays int64) (CreateCheckoutSessionResponse, error) {
 
 	var custID string
 	// Create customer if not already created
@@ -298,6 +309,14 @@ func (order Order) CreateStripeCheckoutSession(email, successURI, cancelURI stri
 	} else {
 		// will create
 		params.CustomerEmail = stripe.String(email)
+	}
+
+	if coupon != "" {
+		params.Discounts = []*stripe.CheckoutSessionDiscountParams{
+			{
+				Coupon: stripe.String(coupon),
+			},
+		}
 	}
 
 	params.SubscriptionData.AddMetadata("orderID", order.ID.String())

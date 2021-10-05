@@ -236,9 +236,15 @@ func (s *Service) CreateOrderFromRequest(ctx context.Context, req CreateOrderReq
 		return nil, fmt.Errorf("failed to create order: %w", err)
 	}
 
+	var coupon string
+	if order.HasSku("brave-search-premium") {
+		coupon = "euf3yao3"
+	}
+
 	if !order.IsPaid() && order.IsStripePayable() {
 		checkoutSession, err := order.CreateStripeCheckoutSession(
 			req.Email,
+			coupon,
 			parseURLAddOrderIDParam(stripeSuccessURI, order.ID),
 			parseURLAddOrderIDParam(stripeCancelURI, order.ID),
 			order.getTrialDays(),
@@ -276,8 +282,14 @@ func (s *Service) GetOrder(orderID uuid.UUID) (*Order, error) {
 				return nil, fmt.Errorf("failed to get stripe checkout session: %w", err)
 			}
 
+			var coupon string
+			if order.HasSku("brave-search-premium") {
+				coupon = "euf3yao3"
+			}
+
 			checkoutSession, err := order.CreateStripeCheckoutSession(
 				stripeSession.CustomerEmail,
+				coupon,
 				stripeSession.SuccessURL, stripeSession.CancelURL,
 				order.getTrialDays(),
 			)
@@ -332,8 +344,14 @@ func (s *Service) SetOrderTrialDays(ctx context.Context, orderID *uuid.UUID, day
 			return fmt.Errorf("failed to get stripe checkout session: %w", err)
 		}
 
+		var coupon string
+		if order.HasSku("brave-search-premium") {
+			coupon = "euf3yao3"
+		}
+
 		checkoutSession, err := order.CreateStripeCheckoutSession(
 			stripeSession.CustomerEmail,
+			coupon,
 			stripeSession.SuccessURL, stripeSession.CancelURL,
 			order.getTrialDays(),
 		)
