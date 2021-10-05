@@ -317,10 +317,12 @@ func (order Order) CreateStripeCheckoutSession(email, coupon, successURI, cancel
 				Coupon: stripe.String(coupon),
 			},
 		}
+	} else {
+		// cannot use coupon AND promotion codes at same time
+		params.AddExtra("allow_promotion_codes", "true")
 	}
 
 	params.SubscriptionData.AddMetadata("orderID", order.ID.String())
-	params.AddExtra("allow_promotion_codes", "true")
 	session, err := session.New(params)
 	if err != nil {
 		return CreateCheckoutSessionResponse{}, fmt.Errorf("failed to create stripe session: %w", err)
