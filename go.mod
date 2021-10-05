@@ -36,7 +36,6 @@ require (
 	github.com/square/go-jose v2.6.0+incompatible
 	github.com/stretchr/testify v1.7.0
 	github.com/stripe/stripe-go v70.15.0+incompatible
-	github.com/stripe/stripe-go/v71 v71.48.0
 	github.com/stripe/stripe-go/v72 v72.67.0
 	github.com/superp00t/niceware v0.0.0-20170614015008-16cb30c384b5
 	github.com/throttled/throttled v2.2.4+incompatible

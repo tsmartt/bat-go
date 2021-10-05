@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	session "github.com/stripe/stripe-go/v71/checkout/session"
-	client "github.com/stripe/stripe-go/v71/client"
-	sub "github.com/stripe/stripe-go/v71/sub"
+	session "github.com/stripe/stripe-go/v72/checkout/session"
+	client "github.com/stripe/stripe-go/v72/client"
+	sub "github.com/stripe/stripe-go/v72/sub"
 
 	"errors"
 
@@ -26,7 +26,7 @@ import (
 	"github.com/brave-intl/bat-go/wallet"
 	"github.com/getsentry/sentry-go"
 	"github.com/linkedin/goavro"
-	stripe "github.com/stripe/stripe-go/v71"
+	stripe "github.com/stripe/stripe-go/v72"
 
 	"github.com/brave-intl/bat-go/utils/clients/cbr"
 	"github.com/brave-intl/bat-go/utils/clients/gemini"
